@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/election-portal', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://InbavananK:inba1234@cluster0.z5oyifs.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

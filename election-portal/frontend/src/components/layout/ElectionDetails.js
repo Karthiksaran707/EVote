@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 
 const ElectionDetails = () => {
   const { id } = useParams();
   const [election, setElection] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchElection = async () => {
@@ -14,8 +14,12 @@ const ElectionDetails = () => {
         const res = await axios.get(`/api/elections/${id}`);
         setElection(res.data);
       } catch (err) {
-        console.error('Error fetching election:', err);
-        alert(`Failed to load election: ${err.response?.data?.message || err.message}`);
+        console.error("Error fetching election:", err);
+        alert(
+          `Failed to load election: ${
+            err.response?.data?.message || err.message
+          }`
+        );
       }
     };
 
@@ -24,8 +28,12 @@ const ElectionDetails = () => {
         const res = await axios.get(`/api/elections/${id}/candidates`);
         setCandidates(res.data);
       } catch (err) {
-        console.error('Error fetching candidates:', err);
-        alert(`Failed to load candidates: ${err.response?.data?.message || err.message}`);
+        console.error("Error fetching candidates:", err);
+        alert(
+          `Failed to load candidates: ${
+            err.response?.data?.message || err.message
+          }`
+        );
       }
     };
 
@@ -48,7 +56,7 @@ const ElectionDetails = () => {
         <p>No candidates yet.</p>
       ) : (
         <ul>
-          {candidates.map(candidate => (
+          {candidates.map((candidate) => (
             <li key={candidate._id}>
               <strong>{candidate.name}</strong>
               {candidate.description && <p>{candidate.description}</p>}
@@ -58,13 +66,23 @@ const ElectionDetails = () => {
       )}
 
       <div className="actions">
-        {election.status === 'active' && !election.voters.includes(user.id) && (
-          <Link to={`/election/${id}/vote`} className="btn success">Vote Now</Link>
+        {election.status === "active" &&
+          !election.voters?.includes(user?.id) && (
+            <Link to={`/election/${id}/vote`} className="btn success">
+              Vote Now
+            </Link>
+          )}
+
+        {/* Only show candidate registration link to admins */}
+        {user && user.role === "admin" && (
+          <Link to={`/election/${id}/candidate`} className="btn primary">
+            Register a Candidate
+          </Link>
         )}
-        {election.status === 'upcoming' && (
-          <Link to={`/election/${id}/candidate`} className="btn primary">Register as Candidate</Link>
-        )}
-        <Link to={`/election/${id}/results`} className="btn secondary">View Results</Link>
+
+        <Link to={`/election/${id}/results`} className="btn secondary">
+          View Results
+        </Link>
       </div>
     </div>
   );
